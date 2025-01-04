@@ -2,6 +2,7 @@
 
 export(AddConsensusSimulation)
 export(CalculatePortfolioPerformance)
+export(CreateSummary)
 export(DownloadData)
 export(ExtractEfficientFrontier)
 export(FindLocalDownloadFolder)

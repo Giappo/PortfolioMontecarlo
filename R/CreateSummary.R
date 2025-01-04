@@ -1,3 +1,4 @@
+#' @export
 CreateSummary <- function(portfolio, data) {
 
   performance <- PortfolioMontecarlo::CalculatePortfolioPerformance(
