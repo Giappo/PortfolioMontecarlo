@@ -1,3 +1,7 @@
+if (!requireNamespace("PortfolioMontecarlo", quietly = TRUE)) {
+  remotes::install_github("Giappo/PortfolioMontecarlo", ref = "main")
+}
+
 library(dplyr)
 library(grDevices)
 library(ggplot2)

@@ -1,6 +1,3 @@
-remotes::install_local("PortfolioMontecarlo.tar.gz")
-library(PortfolioMontecarlo)
-
 uiFile <- system.file("shinyApp", "ui", "ui.R", package = "PortfolioMontecarlo")
 serverFile <- system.file("shinyApp", "server", "server.R", package = "PortfolioMontecarlo")
 

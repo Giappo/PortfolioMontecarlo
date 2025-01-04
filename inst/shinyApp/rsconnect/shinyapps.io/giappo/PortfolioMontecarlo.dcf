@@ -1,10 +1,10 @@
-name: shinyapp
+name: PortfolioMontecarlo
 title:
 username: giappo
 account: giappo
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
-appId: 13656804
+appId: 13662516
 bundleId:
-url: https://giappo.shinyapps.io/shinyapp/
+url: https://giappo.shinyapps.io/PortfolioMontecarlo/
 version: 1
