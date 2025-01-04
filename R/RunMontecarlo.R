@@ -35,7 +35,7 @@ RunMontecarlo <- function(
 
       PortfolioMontecarlo::SetProgress(i = i, NUM_PORTFOLIOS = NUM_PORTFOLIOS)
 
-      weights <- GenerateRandomWeights(minWeights = MIN_WEIGHTS, maxWeights = MAX_WEIGHTS)
+      weights <- PortfolioMontecarlo::GenerateRandomWeights(minWeights = MIN_WEIGHTS, maxWeights = MAX_WEIGHTS)
       port_return <- sum(weights * colMeans(daily_returns)) * 252 # Rendimento annualizzato del portafoglio
       port_volatility <- sqrt(t(weights) %*% cov_matrix %*% weights) * sqrt(252) # Volatilità annualizzata
       port_sharpe_ratio <- (port_return - RISK_FREE_RATE) / port_volatility
@@ -58,7 +58,7 @@ RunMontecarlo <- function(
 
   pf_max_sharpe <- output |> dplyr::filter(SharpeRatio == max(SharpeRatio))
   pf_consensus <- output |> dplyr::filter(Simulation == max(Simulation))
-  efficient_frontier <- ExtractEfficientFrontier(output)
+  efficient_frontier <- PortfolioMontecarlo::ExtractEfficientFrontier(output)
 
   list(
     data = data,

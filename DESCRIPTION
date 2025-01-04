@@ -12,6 +12,7 @@ Depends:
     shiny
 Imports:
     dplyr,
+    DT,
     grDevices,
     ggplot2,
     logger,

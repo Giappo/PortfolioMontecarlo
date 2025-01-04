@@ -78,18 +78,14 @@ PlotPie <- function(portfolio) {
 
 #' @export
 PlotPortfolioPerformance <- function(
-    data,
-    portfolio,
-    market_data = NULL,
-    logY = FALSE
+  data,
+  portfolio,
+  market_data = NULL,
+  logY = FALSE
 ) {
-  portfolio <- portfolio[colnames(data)]
-  portfolioReturns <- as.matrix(portfolio) %*% t(PctChange(data))
-  portfolioCum <- cumprod(1 + portfolioReturns)
-
-  plotData <- data.frame(
-    Date = zoo::index(portfolioCum),
-    Portfolio = as.numeric(portfolioCum)
+  plotData <- PortfolioMontecarlo::CalculatePortfolioPerformance(
+    portfolio = portfolio,
+    data = data
   )
 
   if (!is.null(market_data)) {
@@ -138,4 +134,44 @@ PlotPortfolioPerformance <- function(
     )
 
   return(p)
+}
+
+#' @export
+PlotPortfolioDrawdown <- function(
+  data,
+  portfolio
+) {
+  performance <- PortfolioMontecarlo::CalculatePortfolioPerformance(
+    portfolio = portfolio,
+    data = data
+  )
+
+  p <- plotly::plot_ly(
+    performance,
+    x = ~Date,
+    y = ~Drawdown,
+    type = "scatter",
+    mode = "lines",
+    name = "Portfolio"
+  )
+
+  nTicks <- 8
+  tickvals <- 1:nTicks * floor(nrow(data) / nTicks)
+
+  xaxis <- list(
+    title = "Date",
+    tickangle = 90,
+    ticktext = zoo::index(data)[tickvals],
+    tickvals = tickvals
+  )
+  yaxis <- list(title = "Drawdown")
+
+  p <- p |>
+    plotly::layout(
+      title = "Portfolio Drawdown",
+      xaxis = xaxis,
+      yaxis = yaxis
+    )
+
+  p
 }

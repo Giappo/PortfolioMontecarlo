@@ -119,13 +119,20 @@ server <- function(input, output, session) {
     Out(result)
   })
 
-  # Output pie
+  output$tableStats <- DT::renderDT({
+    shiny::req(Out())
+    PortfolioMontecarlo::CreateSummary(
+      portfolio = Out()$pf_consensus,
+      data = Out()$data
+    )
+  })
+
+  # Plots =======
   output$plotPie <- plotly::renderPlotly({
     shiny::req(Out())
     PortfolioMontecarlo::PlotPie(Out()$pf_consensus)
   })
 
-  # Output performance
   output$plotPerformance <- plotly::renderPlotly({
     shiny::req(Out())
     PortfolioMontecarlo::PlotPortfolioPerformance(
@@ -135,7 +142,14 @@ server <- function(input, output, session) {
     )
   })
 
-  # Output efficient frontier
+  output$plotDrawDown <- plotly::renderPlotly({
+    shiny::req(Out())
+    PortfolioMontecarlo::PlotPortfolioDrawdown(
+      data = Out()$data,
+      portfolio = Out()$pf_consensus
+    )
+  })
+
   output$plotFrontier <- plotly::renderPlotly({
     shiny::req(Out())
     PortfolioMontecarlo::PlotOutput(

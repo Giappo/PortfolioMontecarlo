@@ -2,10 +2,10 @@ panelOutput <- shiny::tabPanel(
   "Output",
   shiny::fluidRow(
     shinydashboard::box(
-      title = "Allocation",
+      title = "Statistics",
       width = 6,
       height = 500,
-      plotly::plotlyOutput("plotPie")
+      DT::DTOutput("tableStats")
     ),
     shinydashboard::box(
       title = "Allocation",
@@ -18,6 +18,11 @@ panelOutput <- shiny::tabPanel(
     title = "Performance",
     width = 12,
     plotly::plotlyOutput("plotPerformance"),
+  ),
+  shinydashboard::box(
+    title = "Drawdown",
+    width = 12,
+    plotly::plotlyOutput("plotDrawDown"),
   ),
   shinydashboard::box(
     title = "Efficient Frontier",

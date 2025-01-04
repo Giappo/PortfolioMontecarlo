@@ -3,6 +3,7 @@ if (!requireNamespace("PortfolioMontecarlo", quietly = TRUE)) {
 }
 
 library(dplyr)
+library(DT)
 library(grDevices)
 library(ggplot2)
 library(logger)
