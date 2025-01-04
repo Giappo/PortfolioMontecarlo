@@ -1,11 +1,11 @@
 server <- function(input, output, session) {
   # Input table
-  tableData <- shiny::reactiveVal(InitializeInputTable())
+  tableData <- shiny::reactiveVal(PortfolioMontecarlo::InitializeInputTable())
 
   shiny::observeEvent(input$updateRows, {
     n <- input$numRows
     currentTable <- tableData()
-    newTable <- InitializeInputTable(n)
+    newTable <- PortfolioMontecarlo::InitializeInputTable(n)
 
     # Copia i dati esistenti nella nuova tabella, se possibile
     commonRows <- min(n, nrow(currentTable))
@@ -104,7 +104,7 @@ server <- function(input, output, session) {
     print("RUNNING MONTECARLO")
 
     # Calcola i risultati della simulazione Monte Carlo e aggiorna la reattiva Out
-    result <- RunMontecarlo(
+    result <- PortfolioMontecarlo::RunMontecarlo(
       ASSETS = ASSETS(),
       MIN_WEIGHTS = MIN_WEIGHTS(),
       MAX_WEIGHTS = MAX_WEIGHTS(),
@@ -122,13 +122,13 @@ server <- function(input, output, session) {
   # Output pie
   output$plotPie <- plotly::renderPlotly({
     shiny::req(Out())
-    PlotPie(Out()$pf_consensus)
+    PortfolioMontecarlo::PlotPie(Out()$pf_consensus)
   })
 
   # Output performance
   output$plotPerformance <- plotly::renderPlotly({
     shiny::req(Out())
-    PlotPortfolioPerformance(
+    PortfolioMontecarlo::PlotPortfolioPerformance(
       data = Out()$data,
       portfolio = Out()$pf_consensus,
       market_data = Out()$market_data
@@ -138,7 +138,7 @@ server <- function(input, output, session) {
   # Output efficient frontier
   output$plotFrontier <- plotly::renderPlotly({
     shiny::req(Out())
-    PlotOutput(
+    PortfolioMontecarlo::PlotOutput(
       efficient_frontier = Out()$efficient_frontier,
       portfolios = list(Out()$pf_consensus),
       market_data = Out()$market_data,
