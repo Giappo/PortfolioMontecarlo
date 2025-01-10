@@ -36,4 +36,3 @@ PortfolioMontecarlo::PlotPortfolioPerformance(data = out$data, portfolio = out$p
 PortfolioMontecarlo::PlotPortfolioDrawdown(data = out$data, portfolio = out$pf_consensus)
 
 portfolio <- out$pf_consensus
-

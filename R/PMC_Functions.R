@@ -15,24 +15,34 @@ DownloadData <- function(
 ) {
   start_date <- start_date |> FormatDate()
   end_date <- end_date |> FormatDate()
-  i <- 0
 
   PortfolioMontecarlo::WithProgress(
     message = "Downloading assets...",
     expr = {
-    # Scarica i dati per tutti gli asset specificati
-    data_list <- lapply(assets, function(asset) {
-      cat("Downloading:", asset, "\n")
-      i <- i + 1
-      PortfolioMontecarlo::SetProgress(index = i, maxIndex = length(assets))
+      total_assets <- length(assets)
 
-      quantmod::getSymbols(asset, src = "yahoo", from = start_date, to = end_date, auto.assign = TRUE)
+      data_list <- lapply(seq_along(assets), function(i) {
+        asset <- assets[i]
 
-      # Estrai i prezzi di chiusura aggiustati (Adjusted Close)
-      data <- quantmod::Ad(get(asset))  # 'Ad()' restituisce i dati 'Adjusted Close'
-      return(data)
+        cat("Downloading:", asset, "\n")
+        PortfolioMontecarlo::SetProgress(index = i, maxIndex = total_assets)
+
+        quantmod::getSymbols(
+          asset,
+          src = "yahoo",
+          from = start_date,
+          to = end_date,
+          auto.assign = TRUE
+        )
+
+        # Estrai i prezzi di chiusura aggiustati (Adjusted Close)
+        data <- quantmod::Ad(get(asset))  # 'Ad()' restituisce i dati 'Adjusted Close'
+        return(data)
+      })
     })
-  })
+
+
+
 
   # Combina i dati in una matrice, dove ogni colonna è un asset
   combined_data <- do.call(cbind, data_list)
@@ -91,6 +101,7 @@ AddConsensusSimulation <- function(
   # Calcola i rendimenti giornalieri
   dailyReturns <- data |> PctChange()
   covMatrix <- stats::cov(dailyReturns)
+  dataMetrics <- data |> PortfolioMontecarlo::CalculateAnnualizedMetrics(RISK_FREE_RATE = RISK_FREE_RATE)
 
   # Seleziona il top-performing fraction%
   # nWinners <- max(floor(nrow(output) * fraction), 1)
@@ -118,8 +129,11 @@ AddConsensusSimulation <- function(
   # Ottieni l'ID della prossima simulazione
   nextSimulationID <- max(output$Simulation, na.rm = TRUE) + 1
 
+  annualizedReturns <- dataMetrics$Return
+  consensusReturn <- sum(consensusWeights * annualizedReturns)
+
   # Calcola il rendimento del portafoglio
-  consensusReturn <- sum(consensusWeights * colMeans(dailyReturns)) * 252  # Rendimento annualizzato
+  # consensusReturn <- sum(consensusWeights * colMeans(dailyReturns)) * 252  # Rendimento annualizzato
 
   # Calcola la volatilità del portafoglio
   consensusStddev <- sqrt(t(consensusWeights) %*% covMatrix %*% consensusWeights) * sqrt(252)  # Volatilità annualizzata
