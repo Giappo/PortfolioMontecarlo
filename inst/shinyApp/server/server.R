@@ -151,20 +151,25 @@ server <- function(input, output, session) {
   })
 
   # Plots =======
+  ## Pie ====
   output$plotPie <- plotly::renderPlotly({
     shiny::req(Out())
     PortfolioMontecarlo::PlotPie(Out()$pf_consensus)
   })
 
+  ## Performance ====
   output$plotPerformance <- plotly::renderPlotly({
     shiny::req(Out())
-    PortfolioMontecarlo::PlotPortfolioPerformance(
-      data = Out()$data,
-      portfolio = Out()$pf_consensus,
-      market_data = Out()$market_data
+
+    portfolios <- list(
+      "Benchmark" = Out()$pf_market,
+      "Max SR" = Out()$pf_max_sharpe,
+      "Consensus" = Out()$pf_consensus
     )
+    PortfolioMontecarlo::PlotPortfolioPerformance(data = Out()$data, portfolios = portfolios, logY = FALSE)
   })
 
+  ## Drawdown ====
   output$plotDrawDown <- plotly::renderPlotly({
     shiny::req(Out())
     PortfolioMontecarlo::PlotPortfolioDrawdown(
@@ -173,6 +178,7 @@ server <- function(input, output, session) {
     )
   })
 
+  ## Frontier ====
   output$plotFrontier <- plotly::renderPlotly({
     shiny::req(Out())
     PortfolioMontecarlo::PlotOutput(

@@ -79,36 +79,36 @@ PlotPie <- function(portfolio) {
 #' @export
 PlotPortfolioPerformance <- function(
   data,
-  portfolio,
-  market_data = NULL,
+  portfolios,
   logY = FALSE
 ) {
-  plotData <- PortfolioMontecarlo::CalculatePortfolioPerformance(
-    portfolio = portfolio,
-    data = data
-  )
-
-  if (!is.null(market_data)) {
-    marketCum <- cumprod(1 + PctChange(market_data))
-    plotData$Market <- as.numeric(marketCum)
+  plotData <- list()
+  for (i in seq_along(portfolios)) {
+    plotData[[i]] <- PortfolioMontecarlo::CalculatePortfolioPerformance(
+      portfolio = portfolios[[i]],
+      data = data
+    )
   }
 
   p <- plotly::plot_ly(
-    plotData,
+    plotData[[1]],
     x = ~Date,
     y = ~Portfolio,
     type = "scatter",
     mode = "lines",
-    name = "Portfolio"
+    name = names(portfolios)[1]
   )
 
-  if (!is.null(market_data)) {
-    p <- p |>
-      plotly::add_trace(
-        y = ~Market,
-        name = "Market",
-        mode = "lines"
-      )
+  for (i in seq_along(plotData[-1])) {
+    p <- plotly::add_trace(
+      p = p,
+      data = plotData[[i + 1]],
+      x = ~Date,
+      y = ~Portfolio,
+      type = "scatter",
+      mode = "lines",
+      name = names(portfolios)[i + 1]
+    )
   }
 
   nTicks <- 8

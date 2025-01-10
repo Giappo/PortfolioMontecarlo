@@ -31,7 +31,7 @@ consensusSummary <- PortfolioMontecarlo::CreateSummary(
 )
 marketSummary <- PortfolioMontecarlo::CreateSummary(
   portfolio = out$pf_market,
-  portfolioName = "Market",
+  portfolioName = "Benchmark",
   data = out$data
 )
 maxSRSummary <- PortfolioMontecarlo::CreateSummary(
@@ -44,6 +44,14 @@ rbind(
   maxSRSummary,
   consensusSummary
 )
+
+portfolios <- list(
+  "Benchmark" = out$pf_market,
+  "Max SR" = out$pf_max_sharpe,
+  "Consensus" = out$pf_consensus
+)
+
+PortfolioMontecarlo::PlotPortfolioPerformance(data = out$data, portfolios = portfolios, logY = TRUE)
 
 PortfolioMontecarlo::PlotOutput(
   efficient_frontier = out$efficient_frontier,
