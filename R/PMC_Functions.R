@@ -9,21 +9,28 @@ FindLocalDownloadFolder <- function() {
 
 #' @export
 DownloadData <- function(
-    assets,
-    start_date,
-    end_date
+  assets,
+  start_date,
+  end_date
 ) {
   start_date <- start_date |> FormatDate()
   end_date <- end_date |> FormatDate()
+  i <- 0
 
-  # Scarica i dati per tutti gli asset specificati
-  data_list <- lapply(assets, function(asset) {
-    cat("Downloading:", asset, "\n")
-    quantmod::getSymbols(asset, src = "yahoo", from = start_date, to = end_date, auto.assign = TRUE)
+  PortfolioMontecarlo::WithProgress(
+    message = "Downloading assets...",
+    expr = {
+    # Scarica i dati per tutti gli asset specificati
+    data_list <- lapply(assets, function(asset) {
+      cat("Downloading:", asset, "\n")
+      i <- i + 1; PortfolioMontecarlo::IncProgress(i = i, NUM_PORTFOLIOS = length(assets))
 
-    # Estrai i prezzi di chiusura aggiustati (Adjusted Close)
-    data <- quantmod::Ad(get(asset))  # 'Ad()' restituisce i dati 'Adjusted Close'
-    return(data)
+      quantmod::getSymbols(asset, src = "yahoo", from = start_date, to = end_date, auto.assign = TRUE)
+
+      # Estrai i prezzi di chiusura aggiustati (Adjusted Close)
+      data <- quantmod::Ad(get(asset))  # 'Ad()' restituisce i dati 'Adjusted Close'
+      return(data)
+    })
   })
 
   # Combina i dati in una matrice, dove ogni colonna è un asset
@@ -68,7 +75,15 @@ PctChange <- function(x) {
 }
 
 #' @export
-AddConsensusSimulation <- function(output, ASSETS, data, fraction = 0.01, RISK_FREE_RATE = 0) {
+AddConsensusSimulation <- function(
+  output,
+  ASSETS,
+  data,
+  # fraction = 0.01,
+  NUM_CONSENSUS,
+  RISK_FREE_RATE = 0
+) {
+
   logger::log_info("AddConsensusSimulation. Start.")
   on.exit(logger::log_info("AddConsensusSimulation. Done."))
 
@@ -77,7 +92,8 @@ AddConsensusSimulation <- function(output, ASSETS, data, fraction = 0.01, RISK_F
   covMatrix <- stats::cov(dailyReturns)
 
   # Seleziona il top-performing fraction%
-  nWinners <- max(floor(nrow(output) * fraction), 1)
+  # nWinners <- max(floor(nrow(output) * fraction), 1)
+  nWinners <- max(floor(NUM_CONSENSUS), 1)
   winnersOutput <- output |>
     dplyr::arrange(dplyr::desc(SharpeRatio)) |>
     dplyr::slice_head(n = nWinners)

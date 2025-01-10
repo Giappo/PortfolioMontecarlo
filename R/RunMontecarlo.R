@@ -1,14 +1,15 @@
 #' @export
 RunMontecarlo <- function(
-    ASSETS,
-    MIN_WEIGHTS = rep(0, length(ASSETS)),
-    MAX_WEIGHTS = rep(1, length(ASSETS)),
-    RISK_FREE_RATE = 0,
-    NUM_PORTFOLIOS = 100000,
-    start_date,
-    end_date,
-    MARKET_REPRESENTATION = "SPY",
-    consensusFraction = sqrt(NUM_PORTFOLIOS) ^ -1 # Average across top simulations
+  ASSETS,
+  MIN_WEIGHTS = rep(0, length(ASSETS)),
+  MAX_WEIGHTS = rep(1, length(ASSETS)),
+  RISK_FREE_RATE = 0,
+  NUM_PORTFOLIOS = 100000,
+  start_date,
+  end_date,
+  MARKET_REPRESENTATION = "SPY",
+  # consensusFraction = sqrt(NUM_PORTFOLIOS) ^ -1 # Average across top simulations
+  NUM_CONSENSUS = 100
 ) {
   start_date <- start_date |> FormatDate()
   end_date <- end_date |> FormatDate()
@@ -53,7 +54,8 @@ RunMontecarlo <- function(
     PortfolioMontecarlo::AddConsensusSimulation(
       ASSETS = ASSETS,
       data = data,
-      fraction = consensusFraction
+      NUM_CONSENSUS = NUM_CONSENSUS
+      # fraction = consensusFraction
     )
 
   pf_max_sharpe <- output |> dplyr::filter(SharpeRatio == max(SharpeRatio))

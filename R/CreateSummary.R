@@ -1,5 +1,9 @@
 #' @export
-CreateSummary <- function(portfolio, data) {
+CreateSummary <- function(
+  portfolio,
+  portfolioName = "",
+  data
+) {
 
   performance <- PortfolioMontecarlo::CalculatePortfolioPerformance(
     portfolio = portfolio,
@@ -15,11 +19,13 @@ CreateSummary <- function(portfolio, data) {
     maxDrawdown
   )
   statisticsNames <- c(
-    "Annual Return",
-    "Annual Volatility",
-    "Sharpe Ratio",
-    "Max Drawdown"
+    paste0(portfolioName, " ", "Annual Return"),
+    paste0(portfolioName, " ", "Annual Volatility"),
+    paste0(portfolioName, " ", "Sharpe Ratio"),
+    paste0(portfolioName, " ", "Max Drawdown")
   )
 
-  cbind(statisticsNames, statistics |> signif(3))
+  out <- cbind(statisticsNames, statistics |> signif(3))
+  colnames(out) <- c("Quantity", "Value")
+  out
 }

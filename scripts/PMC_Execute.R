@@ -9,6 +9,7 @@ start_date <- 20170101
 end_date <- 20241229
 RISK_FREE_RATE <- 0
 NUM_PORTFOLIOS <- 1e4
+NUM_CONSENSUS <- 1e2
 
 out <- PortfolioMontecarlo::RunMontecarlo(
   ASSETS = ASSETS,
@@ -16,6 +17,7 @@ out <- PortfolioMontecarlo::RunMontecarlo(
   MAX_WEIGHTS = MAX_WEIGHTS,
   MARKET_REPRESENTATION = MARKET_REPRESENTATION,
   RISK_FREE_RATE = RISK_FREE_RATE,
+  NUM_CONSENSUS = NUM_CONSENSUS,
   NUM_PORTFOLIOS = NUM_PORTFOLIOS,
   start_date = start_date,
   end_date = end_date

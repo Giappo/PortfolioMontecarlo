@@ -1,7 +1,10 @@
 #' @export
-WithProgress <- function(expr) {
+WithProgress <- function(
+  message = "Running simulations...",
+  expr
+) {
   if (shiny::isRunning()) {
-    shiny::withProgress(message = 'Running simulations...', value = 0, expr = expr)
+    shiny::withProgress(message = message, value = 0, expr = expr)
   } else {
     eval(expr)
   }

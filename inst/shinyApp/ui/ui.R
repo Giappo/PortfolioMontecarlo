@@ -20,6 +20,13 @@ sidebar <- shinydashboard::dashboardSidebar(
       step = 1
     ),
     shiny::numericInput(
+      inputId = "NUM_CONSENSUS",
+      label = "N. portfolios (consensus):",
+      value = 100,
+      min = 1,
+      step = 1
+    ),
+    shiny::numericInput(
       inputId = "start_date",
       label = "Start Date:",
       value = 20170101,

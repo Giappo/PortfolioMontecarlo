@@ -5,7 +5,7 @@ InitializeInputTable <- function(rows = 10) {
     Weight = numeric(rows),
     MinWeight = numeric(rows),
     # MaxWeight = numeric(rows),
-    MaxWeight = rep(100, rows),
+    MaxWeight = rep(1, rows),
     stringsAsFactors = FALSE
   )
 }

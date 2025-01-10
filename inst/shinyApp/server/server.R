@@ -111,6 +111,7 @@ server <- function(input, output, session) {
       MARKET_REPRESENTATION = input$MARKET_REPRESENTATION,
       RISK_FREE_RATE = input$RISK_FREE_RATE,
       NUM_PORTFOLIOS = input$NUM_PORTFOLIOS,
+      NUM_CONSENSUS = input$NUM_CONSENSUS,
       start_date = input$start_date,
       end_date = input$end_date
     )
@@ -123,6 +124,7 @@ server <- function(input, output, session) {
     shiny::req(Out())
     PortfolioMontecarlo::CreateSummary(
       portfolio = Out()$pf_consensus,
+      portfolioName = "Consensus",
       data = Out()$data
     )
   })
