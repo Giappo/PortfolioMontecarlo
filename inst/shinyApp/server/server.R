@@ -122,11 +122,32 @@ server <- function(input, output, session) {
 
   output$tableStats <- DT::renderDT({
     shiny::req(Out())
-    PortfolioMontecarlo::CreateSummary(
+    consensusSummary <- PortfolioMontecarlo::CreateSummary(
       portfolio = Out()$pf_consensus,
       portfolioName = "Consensus",
       data = Out()$data
     )
+    marketSummary <- PortfolioMontecarlo::CreateSummary(
+      portfolio = Out()$pf_market,
+      portfolioName = "Market",
+      data = Out()$data
+    )
+    maxSRSummary <- PortfolioMontecarlo::CreateSummary(
+      portfolio = Out()$pf_max_sharpe,
+      portfolioName = "MaxSR",
+      data = Out()$data
+    )
+    rbind(
+      marketSummary,
+      maxSRSummary,
+      consensusSummary
+    ) |>
+      DT::datatable(
+        options = list(
+          dom = "t",
+          pageLength = 100
+        )
+      )
   })
 
   # Plots =======

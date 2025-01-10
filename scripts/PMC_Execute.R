@@ -24,6 +24,27 @@ out <- PortfolioMontecarlo::RunMontecarlo(
 )
 print(out)
 
+consensusSummary <- PortfolioMontecarlo::CreateSummary(
+  portfolio = out$pf_consensus,
+  portfolioName = "Consensus",
+  data = out$data
+)
+marketSummary <- PortfolioMontecarlo::CreateSummary(
+  portfolio = out$pf_market,
+  portfolioName = "Market",
+  data = out$data
+)
+maxSRSummary <- PortfolioMontecarlo::CreateSummary(
+  portfolio = out$pf_max_sharpe,
+  portfolioName = "MaxSR",
+  data = out$data
+)
+rbind(
+  marketSummary,
+  maxSRSummary,
+  consensusSummary
+)
+
 PortfolioMontecarlo::PlotOutput(
   efficient_frontier = out$efficient_frontier,
   portfolios = list(out$pf_consensus),
@@ -35,4 +56,4 @@ PortfolioMontecarlo::PlotPie(out$pf_consensus)
 PortfolioMontecarlo::PlotPortfolioPerformance(data = out$data, portfolio = out$pf_consensus, market_data = out$market_data)
 PortfolioMontecarlo::PlotPortfolioDrawdown(data = out$data, portfolio = out$pf_consensus)
 
-portfolio <- out$pf_consensus
+# portfolio <- out$pf_consensus

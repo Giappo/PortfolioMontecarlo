@@ -4,13 +4,13 @@ panelOutput <- shiny::tabPanel(
     shinydashboard::box(
       title = "Statistics",
       width = 6,
-      height = 500,
+      height = 700,
       DT::DTOutput("tableStats")
     ),
     shinydashboard::box(
       title = "Allocation",
       width = 6,
-      height = 500,
+      height = 700,
       plotly::plotlyOutput("plotPie")
     )
   ),

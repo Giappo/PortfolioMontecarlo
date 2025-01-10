@@ -69,7 +69,7 @@ RunMontecarlo <- function(
   efficient_frontier <- PortfolioMontecarlo::ExtractEfficientFrontier(output)
 
   list(
-    data = data,
+    data = data |> cbind(market_data),
     market_data = market_data,
     pf_market = pf_market,
     pf_max_sharpe = pf_max_sharpe,
