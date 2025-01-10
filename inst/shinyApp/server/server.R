@@ -129,7 +129,7 @@ server <- function(input, output, session) {
     )
     marketSummary <- PortfolioMontecarlo::CreateSummary(
       portfolio = Out()$pf_market,
-      portfolioName = "Market",
+      portfolioName = "Benchmark",
       data = Out()$data
     )
     maxSRSummary <- PortfolioMontecarlo::CreateSummary(

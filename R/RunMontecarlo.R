@@ -11,17 +11,16 @@ RunMontecarlo <- function(
   # consensusFraction = sqrt(NUM_PORTFOLIOS) ^ -1 # Average across top simulations
   NUM_CONSENSUS = 100
 ) {
-  start_date <- start_date |> FormatDate()
-  end_date <- end_date |> FormatDate()
+  start_date <- start_date |> PortfolioMontecarlo::FormatDate()
+  end_date <- end_date |> PortfolioMontecarlo::FormatDate()
 
   # Download data ====
-  data <- DownloadData(assets = ASSETS, start_date = start_date, end_date = end_date)
-  market_data <- DownloadData(assets = MARKET_REPRESENTATION, start_date = start_date, end_date = end_date)
-  daily_returns <- data |> PctChange()
+  data <- PortfolioMontecarlo::DownloadData(assets = ASSETS, start_date = start_date, end_date = end_date)
+  market_data <- PortfolioMontecarlo::DownloadData(assets = MARKET_REPRESENTATION, start_date = start_date, end_date = end_date)
+  daily_returns <- data |> PortfolioMontecarlo::PctChange()
   cov_matrix <- cov(daily_returns)
   dataMetrics <- data |> PortfolioMontecarlo::CalculateAnnualizedMetrics(RISK_FREE_RATE = RISK_FREE_RATE)
   annualizedReturns <- dataMetrics$Return
-
 
   marketMetrics <- market_data |> PortfolioMontecarlo::CalculateAnnualizedMetrics(RISK_FREE_RATE = RISK_FREE_RATE)
   market_return <- marketMetrics$Return
