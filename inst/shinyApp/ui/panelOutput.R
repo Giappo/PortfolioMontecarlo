@@ -2,6 +2,23 @@ panelOutput <- shiny::tabPanel(
   "Output",
   shiny::fluidRow(
     shinydashboard::box(
+      title = "Allocation Benchmark",
+      width = 4,
+      DT::DTOutput("tablePFBenchmark")
+    ),
+    shinydashboard::box(
+      title = "Allocation MaxSR",
+      width = 4,
+      DT::DTOutput("tablePFMaxSR")
+    ),
+    shinydashboard::box(
+      title = "Allocation Consensus",
+      width = 4,
+      DT::DTOutput("tablePFConsensus")
+    )
+  ),
+  shiny::fluidRow(
+    shinydashboard::box(
       title = "Statistics",
       width = 6,
       height = 700,

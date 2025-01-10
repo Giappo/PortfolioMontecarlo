@@ -47,16 +47,21 @@ rbind(
 
 portfolios <- list(
   "Benchmark" = out$pf_market,
-  "Max SR" = out$pf_max_sharpe,
+  "MaxSR" = out$pf_max_sharpe,
   "Consensus" = out$pf_consensus
 )
 
+
+
+portfolios$Benchmark |> ConvertPortfolioToTable()
+portfolios$MaxSR |> ConvertPortfolioToTable()
+portfolios$Consensus |> ConvertPortfolioToTable()
+
 PortfolioMontecarlo::PlotPortfolioPerformance(data = out$data, portfolios = portfolios, logY = TRUE)
 
-PortfolioMontecarlo::PlotOutput(
+PortfolioMontecarlo::PlotEfficientFrontier(
   efficient_frontier = out$efficient_frontier,
-  portfolios = list(out$pf_consensus),
-  market_data = out$market_data,
+  portfolios = list(out$pf_market, out$pf_max_sharpe, out$pf_consensus),
   RISK_FREE_RATE = RISK_FREE_RATE
 )
 

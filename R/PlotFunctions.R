@@ -1,8 +1,7 @@
 #' @export
-PlotOutput <- function(
+PlotEfficientFrontier <- function(
   efficient_frontier,
   portfolios,
-  market_data = NULL,
   RISK_FREE_RATE = 0
 ) {
   p <- efficient_frontier |>
@@ -22,22 +21,22 @@ PlotOutput <- function(
       legend.position = "bottom"
     )
 
-  if (!is.null(market_data)) {
-    marketDailyReturns <- market_data |> PctChange()
-    marketReturn <- mean(marketDailyReturns) * 252  # Rendimento annualizzato
-    marketVolatility <- sd(marketDailyReturns) * sqrt(252)  # Volatilità annualizzata
-    marketSharpeRatio <- (marketReturn - RISK_FREE_RATE) / marketVolatility  # Sharpe ratio
-
+  i <- 1
+  for (i in seq_along(portfolios)) {
+    portfolio <- portfolios[[i]]
     p <- p +
-      ggplot2::geom_point(ggplot2::aes(x = marketVolatility, y = marketReturn), color = "red", size = 4, shape = 16)
+      ggplot2::geom_point(
+        data = portfolio,
+        mapping = ggplot2::aes(x = Volatility, y = Return),
+        size = 4,
+        shape = 23,
+        color = "darkred",
+        fill = "blue"
+      )
   }
 
-  for (portfolio in portfolios) {
-    p <- p +
-      ggplot2::geom_point(data = portfolio, ggplot2::aes(x = Volatility, y = Return), color = "red", size = 4, shape = 8)
-  }
-
-  print(p)
+  p |>
+    plotly::ggplotly()
 }
 
 #' @export

@@ -181,11 +181,50 @@ server <- function(input, output, session) {
   ## Frontier ====
   output$plotFrontier <- plotly::renderPlotly({
     shiny::req(Out())
-    PortfolioMontecarlo::PlotOutput(
+    PortfolioMontecarlo::PlotEfficientFrontier(
       efficient_frontier = Out()$efficient_frontier,
-      portfolios = list(Out()$pf_consensus),
-      market_data = Out()$market_data,
+      portfolios = list(Out()$pf_market, Out()$pf_max_sharpe, Out()$pf_consensus),
       RISK_FREE_RATE = input$RISK_FREE_RATE
     )
+  })
+
+  # Portfolios ====
+  output$tablePFBenchmark <- DT::renderDT({
+    shiny::req(Out())
+
+    Out()$pf_market |>
+      PortfolioMontecarlo::ConvertPortfolioToTable() |>
+      DT::datatable(
+        options = list(
+          dom = "t",
+          pageLength = 100
+        )
+      )
+  })
+
+  output$tablePFMaxSR <- DT::renderDT({
+    shiny::req(Out())
+
+    Out()$pf_max_sharpe |>
+      PortfolioMontecarlo::ConvertPortfolioToTable() |>
+      DT::datatable(
+        options = list(
+          dom = "t",
+          pageLength = 100
+        )
+      )
+  })
+
+  output$tablePFConsensus <- DT::renderDT({
+    shiny::req(Out())
+
+    Out()$pf_consensus |>
+      PortfolioMontecarlo::ConvertPortfolioToTable() |>
+      DT::datatable(
+        options = list(
+          dom = "t",
+          pageLength = 100
+        )
+      )
   })
 }
