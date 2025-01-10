@@ -23,7 +23,8 @@ DownloadData <- function(
     # Scarica i dati per tutti gli asset specificati
     data_list <- lapply(assets, function(asset) {
       cat("Downloading:", asset, "\n")
-      i <- i + 1; PortfolioMontecarlo::IncProgress(i = i, NUM_PORTFOLIOS = length(assets))
+      i <- i + 1
+      PortfolioMontecarlo::SetProgress(index = i, maxIndex = length(assets))
 
       quantmod::getSymbols(asset, src = "yahoo", from = start_date, to = end_date, auto.assign = TRUE)
 

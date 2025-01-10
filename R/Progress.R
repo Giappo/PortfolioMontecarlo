@@ -11,23 +11,23 @@ WithProgress <- function(
 }
 
 #' @export
-IncProgress <- function(i, NUM_PORTFOLIOS) {
-  percent_complete <- (i / NUM_PORTFOLIOS) * 100
+IncProgress <- function(index, maxIndex) {
+  percent_complete <- (index / maxIndex) * 100
 
   if (shiny::isRunning()) {
-    shiny::incProgress(1 / NUM_PORTFOLIOS, detail = sprintf("Progress: %.0f%%", percent_complete))
+    shiny::incProgress(1 / maxIndex, detail = sprintf("Progress: %.0f%%", percent_complete))
   } else {
-    cat(sprintf("Progresso: %.0f%% - Iterazione %d di %d\n", percent_complete, i, NUM_PORTFOLIOS))
+    cat(sprintf("Progresso: %.0f%% - Iterazione %d di %d\n", percent_complete, index, maxIndex))
   }
 }
 
 #' @export
-SetProgress <- function(i, NUM_PORTFOLIOS) {
-  percent_complete <- (i / NUM_PORTFOLIOS) * 100
+SetProgress <- function(index, maxIndex) {
+  percent_complete <- (index / maxIndex) * 100
 
   if (shiny::isRunning()) {
-    shiny::setProgress(i / NUM_PORTFOLIOS, detail = sprintf("Progress: %.0f%%", percent_complete))
+    shiny::setProgress(index / maxIndex, detail = sprintf("Progress: %.0f%%", percent_complete))
   } else {
-    cat(sprintf("Progresso: %.0f%% - Iterazione %d di %d\n", percent_complete, i, NUM_PORTFOLIOS))
+    cat(sprintf("Progresso: %.0f%% - Iterazione %d di %d\n", percent_complete, index, maxIndex))
   }
 }

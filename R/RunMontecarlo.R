@@ -34,7 +34,7 @@ RunMontecarlo <- function(
     for (i in 1:NUM_PORTFOLIOS) {
       # set.seed(i)
 
-      PortfolioMontecarlo::SetProgress(i = i, NUM_PORTFOLIOS = NUM_PORTFOLIOS)
+      PortfolioMontecarlo::SetProgress(index = i, maxIndex = NUM_PORTFOLIOS)
 
       weights <- PortfolioMontecarlo::GenerateRandomWeights(minWeights = MIN_WEIGHTS, maxWeights = MAX_WEIGHTS)
       port_return <- sum(weights * colMeans(daily_returns)) * 252 # Rendimento annualizzato del portafoglio

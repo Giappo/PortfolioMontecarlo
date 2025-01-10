@@ -5,6 +5,6 @@ account: giappo
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 13662516
-bundleId: 9605543
+bundleId: 9632048
 url: https://giappo.shinyapps.io/PortfolioMontecarlo/
 version: 1
