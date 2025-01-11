@@ -21,6 +21,7 @@ Imports:
     rvest,
     rhandsontable,
     scales,
+    shinyjs,
     shinydashboard,
     zoo
 Encoding: UTF-8

@@ -24,48 +24,28 @@ out <- PortfolioMontecarlo::RunMontecarlo(
 )
 print(out)
 
-consensusSummary <- PortfolioMontecarlo::CreateSummary(
-  portfolio = out$pf_consensus,
-  portfolioName = "Consensus",
+PortfolioMontecarlo::CreateSummary(
+  portfolio = out$portfolios,
   data = out$data
 )
-marketSummary <- PortfolioMontecarlo::CreateSummary(
-  portfolio = out$pf_market,
-  portfolioName = "Benchmark",
-  data = out$data
+
+out$portfolios$Benchmark |> ConvertPortfolioToTable()
+out$portfolios$MaxSR |> ConvertPortfolioToTable()
+out$portfolios$Consensus |> ConvertPortfolioToTable()
+
+PortfolioMontecarlo::PlotPortfolioPerformance(
+  data = out$data,
+  portfolios = out$portfolios,
+  logY = TRUE
 )
-maxSRSummary <- PortfolioMontecarlo::CreateSummary(
-  portfolio = out$pf_max_sharpe,
-  portfolioName = "MaxSR",
-  data = out$data
-)
-rbind(
-  marketSummary,
-  maxSRSummary,
-  consensusSummary
-)
-
-portfolios <- list(
-  "Benchmark" = out$pf_market,
-  "MaxSR" = out$pf_max_sharpe,
-  "Consensus" = out$pf_consensus
-)
-
-
-
-portfolios$Benchmark |> ConvertPortfolioToTable()
-portfolios$MaxSR |> ConvertPortfolioToTable()
-portfolios$Consensus |> ConvertPortfolioToTable()
-
-PortfolioMontecarlo::PlotPortfolioPerformance(data = out$data, portfolios = portfolios, logY = TRUE)
 
 PortfolioMontecarlo::PlotEfficientFrontier(
   efficient_frontier = out$efficient_frontier,
-  portfolios = list(out$pf_market, out$pf_max_sharpe, out$pf_consensus),
+  portfolios = out$portfolios,
   RISK_FREE_RATE = RISK_FREE_RATE
 )
 
-PortfolioMontecarlo::PlotPie(out$pf_consensus)
+PortfolioMontecarlo::PlotPie(out$portfolios$Consensus)
 PortfolioMontecarlo::PlotPortfolioPerformance(data = out$data, portfolio = out$pf_consensus, market_data = out$market_data)
 PortfolioMontecarlo::PlotPortfolioDrawdown(data = out$data, portfolio = out$pf_consensus)
 

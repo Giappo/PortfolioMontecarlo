@@ -38,6 +38,20 @@ server <- function(input, output, session) {
     tableData(newData)
   })
 
+  shiny::observe({
+    symbols <- tableData() |>
+      dplyr::pull(Symbol) |>
+      unique()
+
+    if (nrow(tableData()) > 0 && any(symbols != "")) {
+      shiny::updateActionButton(session, "runMontecarlo", disabled = FALSE)
+      logger::log_info("BUTTON ACTIVATED")
+    } else {
+      shiny::updateActionButton(session, "runMontecarlo", disabled = TRUE)
+      logger::log_info("BUTTON DISABLED")
+    }
+  })
+
   shiny::observeEvent(input$csvFile, {
     shiny::req(input$csvFile) # Assicurati che un file sia stato caricato
 
@@ -122,25 +136,10 @@ server <- function(input, output, session) {
 
   output$tableStats <- DT::renderDT({
     shiny::req(Out())
-    consensusSummary <- PortfolioMontecarlo::CreateSummary(
-      portfolio = Out()$pf_consensus,
-      portfolioName = "Consensus",
+
+    PortfolioMontecarlo::CreateSummary(
+      portfolio = Out()$portfolios,
       data = Out()$data
-    )
-    marketSummary <- PortfolioMontecarlo::CreateSummary(
-      portfolio = Out()$pf_market,
-      portfolioName = "Benchmark",
-      data = Out()$data
-    )
-    maxSRSummary <- PortfolioMontecarlo::CreateSummary(
-      portfolio = Out()$pf_max_sharpe,
-      portfolioName = "MaxSR",
-      data = Out()$data
-    )
-    rbind(
-      marketSummary,
-      maxSRSummary,
-      consensusSummary
     ) |>
       DT::datatable(
         options = list(
@@ -154,19 +153,20 @@ server <- function(input, output, session) {
   ## Pie ====
   output$plotPie <- plotly::renderPlotly({
     shiny::req(Out())
-    PortfolioMontecarlo::PlotPie(Out()$pf_consensus)
+    PortfolioMontecarlo::PlotPie(
+      portfolio = Out()$portfolios$Consensus
+    )
   })
 
   ## Performance ====
   output$plotPerformance <- plotly::renderPlotly({
     shiny::req(Out())
 
-    portfolios <- list(
-      "Benchmark" = Out()$pf_market,
-      "Max SR" = Out()$pf_max_sharpe,
-      "Consensus" = Out()$pf_consensus
+    PortfolioMontecarlo::PlotPortfolioPerformance(
+      data = Out()$data,
+      portfolios = Out()$portfolios,
+      logY = FALSE
     )
-    PortfolioMontecarlo::PlotPortfolioPerformance(data = Out()$data, portfolios = portfolios, logY = FALSE)
   })
 
   ## Drawdown ====
@@ -174,7 +174,7 @@ server <- function(input, output, session) {
     shiny::req(Out())
     PortfolioMontecarlo::PlotPortfolioDrawdown(
       data = Out()$data,
-      portfolio = Out()$pf_consensus
+      portfolio = Out()$portfolios$Consensus
     )
   })
 
@@ -183,7 +183,7 @@ server <- function(input, output, session) {
     shiny::req(Out())
     PortfolioMontecarlo::PlotEfficientFrontier(
       efficient_frontier = Out()$efficient_frontier,
-      portfolios = list(Out()$pf_market, Out()$pf_max_sharpe, Out()$pf_consensus),
+      portfolios = Out()$portfolios,
       RISK_FREE_RATE = input$RISK_FREE_RATE
     )
   })
@@ -192,7 +192,7 @@ server <- function(input, output, session) {
   output$tablePFBenchmark <- DT::renderDT({
     shiny::req(Out())
 
-    Out()$pf_market |>
+    Out()$portfolios$Benchmark |>
       PortfolioMontecarlo::ConvertPortfolioToTable() |>
       DT::datatable(
         options = list(
@@ -205,7 +205,7 @@ server <- function(input, output, session) {
   output$tablePFMaxSR <- DT::renderDT({
     shiny::req(Out())
 
-    Out()$pf_max_sharpe |>
+    Out()$portfolios$MaxSR |>
       PortfolioMontecarlo::ConvertPortfolioToTable() |>
       DT::datatable(
         options = list(
@@ -218,7 +218,7 @@ server <- function(input, output, session) {
   output$tablePFConsensus <- DT::renderDT({
     shiny::req(Out())
 
-    Out()$pf_consensus |>
+    Out()$portfolios$Consensus |>
       PortfolioMontecarlo::ConvertPortfolioToTable() |>
       DT::datatable(
         options = list(

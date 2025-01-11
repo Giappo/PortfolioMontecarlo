@@ -67,12 +67,19 @@ RunMontecarlo <- function(
   pf_market <- PortfolioMontecarlo::CreateMarketPortfolio(market_data)
   efficient_frontier <- PortfolioMontecarlo::ExtractEfficientFrontier(output)
 
+  portfolios <- list(
+    "Benchmark" = pf_market,
+    "MaxSR" = pf_max_sharpe,
+    "Consensus" = pf_consensus
+  )
+
   list(
     data = data |> cbind(market_data),
     market_data = market_data,
-    pf_market = pf_market,
-    pf_max_sharpe = pf_max_sharpe,
-    pf_consensus = pf_consensus,
-    efficient_frontier = efficient_frontier
+    # pf_market = pf_market,
+    # pf_max_sharpe = pf_max_sharpe,
+    # pf_consensus = pf_consensus,
+    efficient_frontier = efficient_frontier,
+    portfolios = portfolios
   )
 }
