@@ -1,5 +1,5 @@
 # Setup ====
-filename <- "PortfoglioApp2.csv"
+filename <- "PortfolioApp7.csv"
 pf <- PortfolioMontecarlo::FindLocalDownloadFolder() |> file.path(filename) |> read.csv()
 ASSETS <- pf |> dplyr::pull(Symbol)
 MIN_WEIGHTS <- pf |> dplyr::pull(MinWeight)
@@ -8,7 +8,7 @@ MARKET_REPRESENTATION <- "SPY"
 start_date <- 20170101
 end_date <- 20241229
 RISK_FREE_RATE <- 0
-NUM_PORTFOLIOS <- 1e4
+NUM_PORTFOLIOS <- 1e5
 NUM_CONSENSUS <- 1e2
 
 out <- PortfolioMontecarlo::RunMontecarlo(
@@ -25,13 +25,13 @@ out <- PortfolioMontecarlo::RunMontecarlo(
 print(out)
 
 PortfolioMontecarlo::CreateSummary(
-  portfolio = out$portfolios,
+  portfolios = out$portfolios,
   data = out$data
 )
 
-out$portfolios$Benchmark |> ConvertPortfolioToTable()
-out$portfolios$MaxSR |> ConvertPortfolioToTable()
-out$portfolios$Consensus |> ConvertPortfolioToTable()
+out$portfolios$Benchmark |> PortfolioMontecarlo::ConvertPortfolioToTable()
+out$portfolios$MaxSR |> PortfolioMontecarlo::ConvertPortfolioToTable()
+out$portfolios$Consensus |> PortfolioMontecarlo::ConvertPortfolioToTable()
 
 PortfolioMontecarlo::PlotPortfolioPerformance(
   data = out$data,
@@ -46,7 +46,6 @@ PortfolioMontecarlo::PlotEfficientFrontier(
 )
 
 PortfolioMontecarlo::PlotPie(out$portfolios$Consensus)
-PortfolioMontecarlo::PlotPortfolioPerformance(data = out$data, portfolio = out$pf_consensus, market_data = out$market_data)
-PortfolioMontecarlo::PlotPortfolioDrawdown(data = out$data, portfolio = out$pf_consensus)
-
-# portfolio <- out$pf_consensus
+PortfolioMontecarlo::PlotPortfolioDrawdown(data = out$data, portfolio = out$portfolios$Benchmark)
+PortfolioMontecarlo::PlotPortfolioDrawdown(data = out$data, portfolio = out$portfolios$MaxSR)
+PortfolioMontecarlo::PlotPortfolioDrawdown(data = out$data, portfolio = out$portfolios$Consensus)

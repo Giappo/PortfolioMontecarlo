@@ -10,8 +10,12 @@ ConvertPortfolioToTable <- function(pf) {
 
   rownames(x2) <- NULL
   colnames(x2) <- c("Symbol", "Weight")
+
+  nDigits <- 3
+  prec <- 10 ^ nDigits
+
   x3 <- x2 |>
-    dplyr::mutate(Weight = paste0((Weight |> signif(2)) * 100, "%"))
+    dplyr::mutate(Weight = round(Weight * prec) * prec ^ -1)
 
   x3
 }

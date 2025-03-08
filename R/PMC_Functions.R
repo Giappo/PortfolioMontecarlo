@@ -42,8 +42,6 @@ DownloadData <- function(
     })
 
 
-
-
   # Combina i dati in una matrice, dove ogni colonna è un asset
   combined_data <- do.call(cbind, data_list)
 

@@ -4,6 +4,7 @@ CreateSummary <- function(
   data
 ) {
   outs <- vector("list", length(portfolios))
+  i <- 1
   for (i in seq_along(portfolios)) {
     portfolio <- portfolios[[i]]
     portfolioName <- names(portfolios)[i]
