@@ -2,9 +2,9 @@ panelOutput <- shiny::tabPanel(
   "Output",
   shiny::fluidRow(
     shinydashboard::box(
-      title = "Allocation Benchmark",
+      title = "Allocation Consensus",
       width = 4,
-      DT::DTOutput("tablePFBenchmark")
+      DT::DTOutput("tablePFConsensus")
     ),
     shinydashboard::box(
       title = "Allocation MaxSR",
@@ -12,9 +12,9 @@ panelOutput <- shiny::tabPanel(
       DT::DTOutput("tablePFMaxSR")
     ),
     shinydashboard::box(
-      title = "Allocation Consensus",
+      title = "Allocation Benchmark",
       width = 4,
-      DT::DTOutput("tablePFConsensus")
+      DT::DTOutput("tablePFBenchmark")
     )
   ),
   shiny::fluidRow(
