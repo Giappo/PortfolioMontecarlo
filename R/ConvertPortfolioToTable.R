@@ -15,7 +15,10 @@ ConvertPortfolioToTable <- function(pf) {
   prec <- 10 ^ nDigits
 
   x3 <- x2 |>
-    dplyr::mutate(Weight = round(Weight * prec) * prec ^ -1)
+    dplyr::mutate(
+      Weight = round(Weight, nDigits),
+      Weight = formatC(Weight, format = "f", digits = nDigits)
+    )
 
   x3
 }
