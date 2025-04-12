@@ -2,3 +2,4 @@
 .Rhistory
 .Renviron
 inst/shinyApp/rsconnect/shinyapps.io/giappo/PortfolioMontecarlo.dcf
+.httr-oauth

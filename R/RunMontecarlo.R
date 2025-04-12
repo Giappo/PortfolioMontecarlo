@@ -16,6 +16,10 @@ RunMontecarlo <- function(
 
   # Download data ====
   data <- PortfolioMontecarlo::DownloadData(assets = ASSETS, start_date = start_date, end_date = end_date)
+  data <- data |>
+    zoo::na.locf(na.rm = FALSE) |>
+    zoo::na.locf(fromLast = TRUE, na.rm = FALSE)
+
   market_data <- PortfolioMontecarlo::DownloadData(assets = MARKET_REPRESENTATION, start_date = start_date, end_date = end_date)
   daily_returns <- data |> PortfolioMontecarlo::PctChange()
   cov_matrix <- cov(daily_returns)
@@ -74,7 +78,10 @@ RunMontecarlo <- function(
   )
 
   list(
-    data = data |> cbind(market_data),
+    data = data |>
+      cbind(market_data) |>
+      zoo::na.locf(na.rm = FALSE) |>
+      zoo::na.locf(fromLast = TRUE, na.rm = FALSE),
     market_data = market_data,
     # pf_market = pf_market,
     # pf_max_sharpe = pf_max_sharpe,

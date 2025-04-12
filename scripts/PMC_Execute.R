@@ -1,5 +1,5 @@
 # Setup ====
-filename <- "PortfolioApp7.csv"
+filename <- "PortfolioApp8.csv"
 pf <- PortfolioMontecarlo::FindLocalDownloadFolder() |> file.path(filename) |> read.csv()
 ASSETS <- pf |> dplyr::pull(Symbol)
 MIN_WEIGHTS <- pf |> dplyr::pull(MinWeight)

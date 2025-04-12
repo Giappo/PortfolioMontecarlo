@@ -6,9 +6,9 @@ CalculatePortfolioPerformance <- function(
   symbols <- colnames(portfolio) |> setdiff(c("Simulation", "Return", "Volatility", "SharpeRatio"))
 
   portfolio <- portfolio[symbols]
-  pctChanges <- PortfolioMontecarlo::PctChange(
-    data |> PortfolioMontecarlo::SelectCols(symbols)
-  )
+  pctChanges <- data |>
+    PortfolioMontecarlo::SelectCols(symbols) |>
+    PortfolioMontecarlo::PctChange()
 
   portfolioReturns <- as.matrix(portfolio) %*% t(pctChanges)
   portfolioCum <- cumprod(1 + portfolioReturns)
