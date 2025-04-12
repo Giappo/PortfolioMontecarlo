@@ -28,7 +28,7 @@ DownloadData <- function(
         PortfolioMontecarlo::SetProgress(index = i, maxIndex = total_assets)
 
         quantmod::getSymbols(
-          asset,
+          Symbols = asset,
           src = "yahoo",
           from = start_date,
           to = end_date,

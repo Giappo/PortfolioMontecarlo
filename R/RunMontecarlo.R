@@ -15,6 +15,7 @@ RunMontecarlo <- function(
   end_date <- end_date |> PortfolioMontecarlo::FormatDate()
 
   # Download data ====
+  ASSETS <- ASSETS |> PortfolioMontecarlo::ConvertTickersForQuantmod()
   data <- PortfolioMontecarlo::DownloadData(assets = ASSETS, start_date = start_date, end_date = end_date)
   data <- data |>
     zoo::na.locf(na.rm = FALSE) |>
