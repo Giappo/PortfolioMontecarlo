@@ -169,12 +169,22 @@ server <- function(input, output, session) {
     )
   })
 
+  ## Gains ====
+  output$plotGains <- plotly::renderPlotly({
+    shiny::req(Out())
+
+    PortfolioMontecarlo::PlotPortfolioGains(
+      data = Out()$data,
+      portfolios = Out()$portfolios
+    )
+  })
+
   ## Drawdown ====
   output$plotDrawDown <- plotly::renderPlotly({
     shiny::req(Out())
     PortfolioMontecarlo::PlotPortfolioDrawdown(
       data = Out()$data,
-      portfolio = Out()$portfolios$Consensus
+      portfolios = Out()$portfolios
     )
   })
 

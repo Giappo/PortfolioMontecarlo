@@ -1,7 +1,8 @@
 #' @export
 CalculatePortfolioPerformance <- function(
   portfolio,
-  data
+  data,
+  cumulative = TRUE
 ) {
   symbols <- colnames(portfolio) |> setdiff(c("Simulation", "Return", "Volatility", "SharpeRatio"))
 
@@ -15,7 +16,8 @@ CalculatePortfolioPerformance <- function(
 
   df <- data.frame(
     Date = zoo::index(portfolioCum),
-    Portfolio = as.numeric(portfolioCum)
+    Portfolio = as.numeric(portfolioCum),
+    DailyGain = as.numeric(portfolioReturns)
   )
 
   rownames(df) <- zoo::index(pctChanges)

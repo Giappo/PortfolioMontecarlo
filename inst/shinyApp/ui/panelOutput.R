@@ -37,6 +37,11 @@ panelOutput <- shiny::tabPanel(
     plotly::plotlyOutput("plotPerformance"),
   ),
   shinydashboard::box(
+    title = "Gains",
+    width = 12,
+    plotly::plotlyOutput("plotGains"),
+  ),
+  shinydashboard::box(
     title = "Drawdown",
     width = 12,
     plotly::plotlyOutput("plotDrawDown"),

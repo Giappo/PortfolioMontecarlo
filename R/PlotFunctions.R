@@ -4,10 +4,24 @@ PlotEfficientFrontier <- function(
   portfolios,
   RISK_FREE_RATE = 0
 ) {
+  efficient_frontier$Name <- efficient_frontier$Simulation
+
   p <- efficient_frontier |>
-    ggplot2::ggplot(ggplot2::aes(x = Volatility, y = Return, color = SharpeRatio)) +
+    ggplot2::ggplot(
+      ggplot2::aes(
+        x = Volatility,
+        y = Return,
+        color = SharpeRatio,
+        text = paste(
+          "Name:", Name,
+          "<br>Volatility:", scales::percent(Volatility),
+          "<br>Return:", scales::percent(Return),
+          "<br>Sharpe Ratio:", round(SharpeRatio, 2)
+        )
+      )
+    ) +
     ggplot2::geom_point(size = 3) +
-    ggplot2::scale_color_gradient(low = "blue", high = "green", name = "Sharpe Ratio") +
+    ggplot2::scale_color_gradient(low = "purple", high = "lightseagreen", name = "Sharpe Ratio") +
     ggplot2::labs(
       title = "Efficient Frontier",
       x = "Volatility",
@@ -21,22 +35,33 @@ PlotEfficientFrontier <- function(
       legend.position = "bottom"
     )
 
+  defaultColors <- PortfolioMontecarlo::GetPlotlyDefaultColors(length(portfolios))
+
   i <- 1
   for (i in seq_along(portfolios)) {
     portfolio <- portfolios[[i]]
+    portfolio$Name <- names(portfolios)[i]
     p <- p +
       ggplot2::geom_point(
         data = portfolio,
-        mapping = ggplot2::aes(x = Volatility, y = Return),
+        mapping = ggplot2::aes(
+          x = Volatility,
+          y = Return,
+          text = paste(
+            "Name:", Name,
+            "<br>Volatility:", scales::percent(Volatility),
+            "<br>Return:", scales::percent(Return),
+            "<br>Sharpe Ratio:", round(SharpeRatio, 2)
+          )
+        ),
         size = 4,
         shape = 23,
-        color = "darkred",
-        fill = "blue"
+        color = "black",
+        fill = defaultColors[i]
       )
   }
 
-  p |>
-    plotly::ggplotly()
+  p |> plotly::ggplotly(tooltip = "text")
 }
 
 #' @export
@@ -89,24 +114,16 @@ PlotPortfolioPerformance <- function(
     )
   }
 
-  p <- plotly::plot_ly(
-    plotData[[1]],
-    x = ~Date,
-    y = ~Portfolio,
-    type = "scatter",
-    mode = "lines",
-    name = names(portfolios)[1]
-  )
-
-  for (i in seq_along(plotData[-1])) {
+  p <- plotly::plot_ly()
+  for (i in 1:3) {
     p <- plotly::add_trace(
       p = p,
-      data = plotData[[i + 1]],
+      data = plotData[[i]],
       x = ~Date,
       y = ~Portfolio,
       type = "scatter",
       mode = "lines",
-      name = names(portfolios)[i + 1]
+      name = names(portfolios)[i]
     )
   }
 
@@ -132,27 +149,34 @@ PlotPortfolioPerformance <- function(
       yaxis = yaxis
     )
 
-  return(p)
+  p
 }
 
 #' @export
 PlotPortfolioDrawdown <- function(
   data,
-  portfolio
+  portfolios
 ) {
-  performance <- PortfolioMontecarlo::CalculatePortfolioPerformance(
-    portfolio = portfolio,
-    data = data
-  )
+  plotData <- list()
+  for (i in seq_along(portfolios)) {
+    plotData[[i]] <- PortfolioMontecarlo::CalculatePortfolioPerformance(
+      portfolio = portfolios[[i]],
+      data = data
+    )
+  }
 
-  p <- plotly::plot_ly(
-    performance,
-    x = ~Date,
-    y = ~Drawdown,
-    type = "scatter",
-    mode = "lines",
-    name = "Portfolio"
-  )
+  p <- plotly::plot_ly()
+  for (i in 1:3) {
+    p <- plotly::add_trace(
+      p = p,
+      data = plotData[[i]],
+      x = ~Date,
+      y = ~Drawdown,
+      type = "scatter",
+      mode = "lines",
+      name = names(portfolios)[i]
+    )
+  }
 
   nTicks <- 8
   tickvals <- 1:nTicks * floor(nrow(data) / nTicks)
@@ -170,6 +194,48 @@ PlotPortfolioDrawdown <- function(
       title = "Portfolio Drawdown",
       xaxis = xaxis,
       yaxis = yaxis
+    )
+
+  p
+}
+
+#' @export
+PlotPortfolioGains <- function(
+  data,
+  portfolios
+) {
+  plotData <- list()
+  for (i in seq_along(portfolios)) {
+    plotData[[i]] <- PortfolioMontecarlo::CalculatePortfolioPerformance(
+      portfolio = portfolios[[i]],
+      data = data
+    )
+  }
+
+  # Estimate densities
+  densityList <- lapply(plotData, function(df) {
+    stats::density(df$DailyGain)
+  })
+
+  p <- plotly::plot_ly()
+  for (i in 1:3) {
+    p <- plotly::add_trace(
+      p = p,
+      x = densityList[[i]]$x,
+      y = densityList[[i]]$y,
+      type = "scatter",
+      mode = "lines",
+      fill = "tozeroy",
+      alpha = 0.1,
+      name = names(portfolios)[i]
+    )
+  }
+
+  p <- p |>
+    plotly::layout(
+      title = "Smoothed Daily Gain Distributions",
+      xaxis = list(title = "Daily Gain"),
+      yaxis = list(title = "Density")
     )
 
   p

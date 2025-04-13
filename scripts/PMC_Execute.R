@@ -40,6 +40,16 @@ PortfolioMontecarlo::PlotPortfolioPerformance(
   logY = TRUE
 )
 
+PortfolioMontecarlo::PlotPortfolioGains(
+  data = out$data,
+  portfolios = out$portfolios
+)
+
+PortfolioMontecarlo::PlotPortfolioDrawdown(
+  data = out$data,
+  portfolio = out$portfolios
+)
+
 PortfolioMontecarlo::PlotEfficientFrontier(
   efficient_frontier = out$efficient_frontier,
   portfolios = out$portfolios,
@@ -47,6 +57,6 @@ PortfolioMontecarlo::PlotEfficientFrontier(
 )
 
 PortfolioMontecarlo::PlotPie(out$portfolios$Consensus)
-PortfolioMontecarlo::PlotPortfolioDrawdown(data = out$data, portfolio = out$portfolios$Benchmark)
-PortfolioMontecarlo::PlotPortfolioDrawdown(data = out$data, portfolio = out$portfolios$MaxSR)
-PortfolioMontecarlo::PlotPortfolioDrawdown(data = out$data, portfolio = out$portfolios$Consensus)
+# PortfolioMontecarlo::PlotPortfolioDrawdown(data = out$data, portfolio = out$portfolios$Benchmark)
+# PortfolioMontecarlo::PlotPortfolioDrawdown(data = out$data, portfolio = out$portfolios$MaxSR)
+# PortfolioMontecarlo::PlotPortfolioDrawdown(data = out$data, portfolio = out$portfolios$Consensus)
