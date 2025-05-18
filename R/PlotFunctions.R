@@ -203,23 +203,25 @@ PlotPortfolioDrawdown <- function(
 #' @export
 PlotPortfolioGains <- function(
   data,
-  portfolios
+  portfolios,
+  title = "Smoothed Daily Gain Distributions"
 ) {
-  plotData <- list()
-  for (i in seq_along(portfolios)) {
-    plotData[[i]] <- PortfolioMontecarlo::CalculatePortfolioPerformanceOverTime(
-      portfolio = portfolios[[i]],
+  plotData <- purrr::map(
+    portfolios,
+    ~ PortfolioMontecarlo::CalculatePortfolioPerformanceOverTime(
+      portfolio = .x,
       data = data
     )
-  }
+  )
 
-  # Estimate densities
-  densityList <- lapply(plotData, function(df) {
-    stats::density(df$DailyGain)
-  })
+  densityList <- purrr::map(
+    plotData,
+    ~ stats::density(.x$DailyGain)
+  )
 
   p <- plotly::plot_ly()
-  for (i in seq_along(portfolios)) {
+
+  for (i in seq_along(densityList)) {
     p <- plotly::add_trace(
       p = p,
       x = densityList[[i]]$x,
@@ -234,9 +236,10 @@ PlotPortfolioGains <- function(
 
   p <- p |>
     plotly::layout(
-      title = "Smoothed Daily Gain Distributions",
+      title = list(text = title),
       xaxis = list(title = "Daily Gain"),
-      yaxis = list(title = "Density")
+      yaxis = list(title = "Density"),
+      legend = list(title = list(text = "Portfolio"))
     )
 
   p

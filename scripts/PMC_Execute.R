@@ -31,7 +31,9 @@ PortfolioMontecarlo::CreateSummary(
   data = out$data
 )
 
-out$portfolios |> PortfolioMontecarlo::ConvertPortfoliosToTable()
+PortfolioMontecarlo::ConvertPortfoliosToTable(
+  portfolios = out$portfolios
+)
 
 PortfolioMontecarlo::PlotPortfolioPerformance(
   data = out$data,
@@ -55,7 +57,7 @@ PortfolioMontecarlo::PlotEfficientFrontier(
   RISK_FREE_RATE = RISK_FREE_RATE
 )
 
-PortfolioMontecarlo::PlotPie(out$portfolios$Consensus)
+# PortfolioMontecarlo::PlotPie(out$portfolios$Consensus)
 # PortfolioMontecarlo::PlotPortfolioDrawdown(data = out$data, portfolio = out$portfolios$Benchmark)
 # PortfolioMontecarlo::PlotPortfolioDrawdown(data = out$data, portfolio = out$portfolios$MaxSR)
 # PortfolioMontecarlo::PlotPortfolioDrawdown(data = out$data, portfolio = out$portfolios$Consensus)
