@@ -1,3 +1,4 @@
+#' @export
 GetCurrentPE <- function(symbol) {
   url <- paste0("https://www.stockanalysis.com/stocks/", tolower(symbol), "/")
 
@@ -12,6 +13,7 @@ GetCurrentPE <- function(symbol) {
   return(pe_ratio)
 }
 
+#' @export
 GetForwardPE <- function(symbol) {
   url <- paste0("https://www.stockanalysis.com/stocks/", tolower(symbol), "/")
 
@@ -26,6 +28,7 @@ GetForwardPE <- function(symbol) {
   return(pe_ratio)
 }
 
+#' @export
 GetCurrentPEdf <- function(df) {
   df |>
     dplyr::mutate(
@@ -39,6 +42,7 @@ GetCurrentPEdf <- function(df) {
     )
 }
 
+#' @export
 GetForwardPEdf <- function(df) {
   df |>
     dplyr::mutate(

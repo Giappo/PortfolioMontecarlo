@@ -4,8 +4,8 @@ filename <- "PortfolioApp12.csv"
 pf <- PortfolioMontecarlo::FindLocalDownloadFolder() |>
   file.path(filename) |>
   read.csv() |>
-  GetCurrentPEdf() |>
-  GetForwardPEdf()
+  PortfolioMontecarlo::GetCurrentPEdf() |>
+  PortfolioMontecarlo::GetForwardPEdf()
 ASSETS <- pf |> dplyr::pull(Symbol)
 MIN_WEIGHTS <- pf |> dplyr::pull(MinWeight)
 MAX_WEIGHTS <- pf |> dplyr::pull(MaxWeight)
