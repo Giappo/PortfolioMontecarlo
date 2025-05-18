@@ -1,6 +1,5 @@
 # Setup ====
-filename <- "PortfolioApp12.csv"
-# filename <- "Sollazzo - 2025-04-12.csv"
+filename <- "PortfolioApp.csv"
 pf <- PortfolioMontecarlo::FindLocalDownloadFolder() |>
   file.path(filename) |>
   read.csv() |>

@@ -1,5 +1,6 @@
 #' @export
 GetCurrentPE <- function(symbol) {
+  if (symbol == "BRK-B") symbol <- "BRK.B"
   url <- paste0("https://www.stockanalysis.com/stocks/", tolower(symbol), "/")
 
   page <- rvest::read_html(url)
@@ -15,6 +16,7 @@ GetCurrentPE <- function(symbol) {
 
 #' @export
 GetForwardPE <- function(symbol) {
+  if (symbol == "BRK-B") symbol <- "BRK.B"
   url <- paste0("https://www.stockanalysis.com/stocks/", tolower(symbol), "/")
 
   page <- rvest::read_html(url)
@@ -33,7 +35,7 @@ GetCurrentPEdf <- function(df) {
   df |>
     dplyr::mutate(
       PE = purrr::map_dbl(Symbol, function(sym) {
-        pe <- GetCurrentPE(sym)
+        pe <- PortfolioMontecarlo::GetCurrentPE(sym)
         if (length(pe) == 0 || is.na(pe)) {
           return(NA_real_)
         }
@@ -47,7 +49,7 @@ GetForwardPEdf <- function(df) {
   df |>
     dplyr::mutate(
       ForwardPE = purrr::map_dbl(Symbol, function(sym) {
-        pe <- GetForwardPE(sym)
+        pe <- PortfolioMontecarlo::GetForwardPE(sym)
         if (length(pe) == 0 || is.na(pe)) {
           return(NA_real_)
         }
