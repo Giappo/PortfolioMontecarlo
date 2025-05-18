@@ -22,3 +22,22 @@ ConvertPortfolioToTable <- function(pf) {
 
   x3
 }
+
+#' @export
+ConvertPortfoliosToTable <- function(portfolios) {
+  outs <- vector("list", length = length(portfolios))
+  names(outs) <- names(portfolios)
+  for (i in seq_along(portfolios)) {
+    outs[[i]] <- PortfolioMontecarlo::ConvertPortfolioToTable(pf = portfolios[[i]])
+  }
+
+  combined <- Reduce(function(x, y) merge(x, y, by = "Symbol", all = TRUE), lapply(names(outs), function(name) {
+    df <- outs[[name]]
+    colnames(df)[2] <- name
+    df
+  }))
+
+  combined[is.na(combined)] <- 0
+
+  combined
+}

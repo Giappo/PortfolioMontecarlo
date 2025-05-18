@@ -107,15 +107,16 @@ PlotPortfolioPerformance <- function(
   logY = FALSE
 ) {
   plotData <- list()
+  i <- 1
   for (i in seq_along(portfolios)) {
-    plotData[[i]] <- PortfolioMontecarlo::CalculatePortfolioPerformance(
+    plotData[[i]] <- PortfolioMontecarlo::CalculatePortfolioPerformanceOverTime(
       portfolio = portfolios[[i]],
       data = data
     )
   }
 
   p <- plotly::plot_ly()
-  for (i in 1:3) {
+  for (i in seq_along(portfolios)) {
     p <- plotly::add_trace(
       p = p,
       data = plotData[[i]],
@@ -159,14 +160,14 @@ PlotPortfolioDrawdown <- function(
 ) {
   plotData <- list()
   for (i in seq_along(portfolios)) {
-    plotData[[i]] <- PortfolioMontecarlo::CalculatePortfolioPerformance(
+    plotData[[i]] <- PortfolioMontecarlo::CalculatePortfolioPerformanceOverTime(
       portfolio = portfolios[[i]],
       data = data
     )
   }
 
   p <- plotly::plot_ly()
-  for (i in 1:3) {
+  for (i in seq_along(portfolios)) {
     p <- plotly::add_trace(
       p = p,
       data = plotData[[i]],
@@ -206,7 +207,7 @@ PlotPortfolioGains <- function(
 ) {
   plotData <- list()
   for (i in seq_along(portfolios)) {
-    plotData[[i]] <- PortfolioMontecarlo::CalculatePortfolioPerformance(
+    plotData[[i]] <- PortfolioMontecarlo::CalculatePortfolioPerformanceOverTime(
       portfolio = portfolios[[i]],
       data = data
     )
@@ -218,7 +219,7 @@ PlotPortfolioGains <- function(
   })
 
   p <- plotly::plot_ly()
-  for (i in 1:3) {
+  for (i in seq_along(portfolios)) {
     p <- plotly::add_trace(
       p = p,
       x = densityList[[i]]$x,

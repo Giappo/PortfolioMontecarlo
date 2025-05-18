@@ -3,7 +3,7 @@ CreateMarketPortfolio <- function(
   market_data
 ) {
   marketName <- market_data |> colnames()
-  marketMetrics <- market_data |> PortfolioMontecarlo::CalculateAnnualizedMetrics()
+  marketMetrics <- market_data |> PortfolioMontecarlo::CalculateAnnualizedDataMetrics()
   out <- data.frame(
     "Simulation" = 0,
     "Return" = marketMetrics$Return |> unname(),

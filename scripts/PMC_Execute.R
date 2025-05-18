@@ -1,7 +1,11 @@
 # Setup ====
-# filename <- "PortfolioApp8.csv"
-filename <- "Sollazzo - 2025-04-12.csv"
-pf <- PortfolioMontecarlo::FindLocalDownloadFolder() |> file.path(filename) |> read.csv()
+filename <- "PortfolioApp12.csv"
+# filename <- "Sollazzo - 2025-04-12.csv"
+pf <- PortfolioMontecarlo::FindLocalDownloadFolder() |>
+  file.path(filename) |>
+  read.csv() |>
+  GetCurrentPEdf() |>
+  GetForwardPEdf()
 ASSETS <- pf |> dplyr::pull(Symbol)
 MIN_WEIGHTS <- pf |> dplyr::pull(MinWeight)
 MAX_WEIGHTS <- pf |> dplyr::pull(MaxWeight)
@@ -13,9 +17,7 @@ NUM_PORTFOLIOS <- 1e5
 NUM_CONSENSUS <- 1e2
 
 out <- PortfolioMontecarlo::RunMontecarlo(
-  ASSETS = ASSETS,
-  MIN_WEIGHTS = MIN_WEIGHTS,
-  MAX_WEIGHTS = MAX_WEIGHTS,
+  pf = pf,
   MARKET_REPRESENTATION = MARKET_REPRESENTATION,
   RISK_FREE_RATE = RISK_FREE_RATE,
   NUM_CONSENSUS = NUM_CONSENSUS,
@@ -30,9 +32,7 @@ PortfolioMontecarlo::CreateSummary(
   data = out$data
 )
 
-out$portfolios$Benchmark |> PortfolioMontecarlo::ConvertPortfolioToTable()
-out$portfolios$MaxSR |> PortfolioMontecarlo::ConvertPortfolioToTable()
-out$portfolios$Consensus |> PortfolioMontecarlo::ConvertPortfolioToTable()
+out$portfolios |> PortfolioMontecarlo::ConvertPortfoliosToTable()
 
 PortfolioMontecarlo::PlotPortfolioPerformance(
   data = out$data,

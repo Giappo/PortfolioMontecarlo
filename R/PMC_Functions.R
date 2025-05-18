@@ -99,7 +99,8 @@ AddConsensusSimulation <- function(
   # Calcola i rendimenti giornalieri
   dailyReturns <- data |> PctChange()
   covMatrix <- stats::cov(dailyReturns)
-  dataMetrics <- data |> PortfolioMontecarlo::CalculateAnnualizedMetrics(RISK_FREE_RATE = RISK_FREE_RATE)
+  dataMetrics <- data |>
+    PortfolioMontecarlo::CalculateAnnualizedDataMetrics(RISK_FREE_RATE = RISK_FREE_RATE)
 
   # Seleziona il top-performing fraction%
   # nWinners <- max(floor(nrow(output) * fraction), 1)

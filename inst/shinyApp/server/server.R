@@ -119,9 +119,7 @@ server <- function(input, output, session) {
 
     # Calcola i risultati della simulazione Monte Carlo e aggiorna la reattiva Out
     result <- PortfolioMontecarlo::RunMontecarlo(
-      ASSETS = ASSETS(),
-      MIN_WEIGHTS = MIN_WEIGHTS(),
-      MAX_WEIGHTS = MAX_WEIGHTS(),
+      pf = tableData(),
       MARKET_REPRESENTATION = input$MARKET_REPRESENTATION,
       RISK_FREE_RATE = input$RISK_FREE_RATE,
       NUM_PORTFOLIOS = input$NUM_PORTFOLIOS,
@@ -199,11 +197,11 @@ server <- function(input, output, session) {
   })
 
   # Portfolios ====
-  output$tablePFBenchmark <- DT::renderDT({
+  output$portfolioTables <- DT::renderDT({
     shiny::req(Out())
 
-    Out()$portfolios$Benchmark |>
-      PortfolioMontecarlo::ConvertPortfolioToTable() |>
+    Out()$portfolios |>
+      PortfolioMontecarlo::ConvertPortfoliosToTable() |>
       DT::datatable(
         options = list(
           dom = "t",
@@ -212,29 +210,42 @@ server <- function(input, output, session) {
       )
   })
 
-  output$tablePFMaxSR <- DT::renderDT({
-    shiny::req(Out())
-
-    Out()$portfolios$MaxSR |>
-      PortfolioMontecarlo::ConvertPortfolioToTable() |>
-      DT::datatable(
-        options = list(
-          dom = "t",
-          pageLength = 100
-        )
-      )
-  })
-
-  output$tablePFConsensus <- DT::renderDT({
-    shiny::req(Out())
-
-    Out()$portfolios$Consensus |>
-      PortfolioMontecarlo::ConvertPortfolioToTable() |>
-      DT::datatable(
-        options = list(
-          dom = "t",
-          pageLength = 100
-        )
-      )
-  })
+  # output$tablePFBenchmark <- DT::renderDT({
+  #   shiny::req(Out())
+  #
+  #   Out()$portfolios$Benchmark |>
+  #     PortfolioMontecarlo::ConvertPortfolioToTable() |>
+  #     DT::datatable(
+  #       options = list(
+  #         dom = "t",
+  #         pageLength = 100
+  #       )
+  #     )
+  # })
+  #
+  # output$tablePFMaxSR <- DT::renderDT({
+  #   shiny::req(Out())
+  #
+  #   Out()$portfolios$MaxSR |>
+  #     PortfolioMontecarlo::ConvertPortfolioToTable() |>
+  #     DT::datatable(
+  #       options = list(
+  #         dom = "t",
+  #         pageLength = 100
+  #       )
+  #     )
+  # })
+  #
+  # output$tablePFConsensus <- DT::renderDT({
+  #   shiny::req(Out())
+  #
+  #   Out()$portfolios$Consensus |>
+  #     PortfolioMontecarlo::ConvertPortfolioToTable() |>
+  #     DT::datatable(
+  #       options = list(
+  #         dom = "t",
+  #         pageLength = 100
+  #       )
+  #     )
+  # })
 }

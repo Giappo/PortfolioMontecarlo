@@ -1,5 +1,5 @@
 #' @export
-CalculatePortfolioPerformance <- function(
+CalculatePortfolioPerformanceOverTime <- function(
   portfolio,
   data,
   cumulative = TRUE

@@ -1,5 +1,5 @@
 #' @export
-CalculateAnnualizedMetrics <- function(data, RISK_FREE_RATE = 0) {
+CalculateAnnualizedDataMetrics <- function(data, RISK_FREE_RATE = 0) {
   cols <- colnames(data)
   N <- length(cols)
   outS <- outV <- outR <- rep(NA, N)
